@@ -22,5 +22,7 @@ if __name__ == '__main__':
             screen.blit(text_surface, (300,50))
             screen.blit(snail_surface, (snail_x_pos, 250))
             snail_x_pos -= 4
+            if snail_x_pos < -100:
+                snail_x_pos = 800
         pygame.display.update()
         clock.tick(60)
