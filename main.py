@@ -7,7 +7,7 @@ from sys import exit
 if __name__ == '__main__':
    pygame.init()
    screen = pygame.display.set_mode((800, 400))
-
+   pygame.display.set_caption('Runner')
    while True:
       for event in pygame.event.get():
          if event.type == pygame.QUIT:
