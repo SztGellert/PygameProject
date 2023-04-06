@@ -4,11 +4,11 @@ import time
 import pygame
 from sys import exit
 
-def display_score():
-    current_time = int(pygame.time.get_ticks() / 1000) - start_time
-    score_surf = test_font.render(f'Score: {current_time}', False, (64,64,64))
+def display_score(score: int):
+    score_surf = test_font.render(f'Score: {score}', False, (64,64,64))
     score_rect = score_surf.get_rect(center = (400,50))
     screen.blit(score_surf, score_rect)
+
 
 if __name__ == '__main__':
     game_active = True
@@ -27,6 +27,7 @@ if __name__ == '__main__':
     snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
     snail_rect = snail_surface.get_rect(midbottom = (160, 300))
     player_gravity = 0
+    score = 0
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,16 +44,21 @@ if __name__ == '__main__':
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
                         player_gravity = -20
+                        score+=1
+
             else:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+                        score = 0
+
                         game_active = True
                         snail_rect.right=800
-                        current_time = int(pygame.time.get_ticks() / 1000)
+                        start_time =  int(pygame.time.get_ticks() / 1000)
         if game_active:
+
             screen.blit(sky_surface, (0,0))
             screen.blit(ground_surface, (0,300))
-            display_score()
+            display_score(score)
             #pygame.draw.rect(screen, "#c0e8ec", score_rect)
             #pygame.draw.rect(screen, "#c0e8ec", score_rect, 10)
             #screen.blit(score_surf, score_rect)
@@ -67,9 +73,12 @@ if __name__ == '__main__':
 
             if snail_rect.colliderect(player_rect):
                 game_active = False
-        else:
-            screen.fill("Yellow")
 
+        else:
+            screen.fill((94,129,162))
+            score_surf = test_font.render(f'Score: {score}', False, (64, 64, 64))
+            score_rect = score_surf.get_rect(center=(400, 50))
+            screen.blit(score_surf, score_rect)
 
         pygame.display.update()
 
