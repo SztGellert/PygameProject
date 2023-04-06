@@ -5,8 +5,8 @@ import pygame
 from sys import exit
 
 def display_score():
-    current_time = pygame.time.get_ticks() - start_time
-    score_surf = test_font.render(str(current_time), False, (64,64,64))
+    current_time = int(pygame.time.get_ticks() / 1000) - start_time
+    score_surf = test_font.render(f'Score: {current_time}', False, (64,64,64))
     score_rect = score_surf.get_rect(center = (400,50))
     screen.blit(score_surf, score_rect)
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
                     if event.key == pygame.K_SPACE:
                         game_active = True
                         snail_rect.right=800
-                        start_time = pygame.time.get_ticks()
+                        current_time = int(pygame.time.get_ticks() / 1000)
         if game_active:
             screen.blit(sky_surface, (0,0))
             screen.blit(ground_surface, (0,300))
