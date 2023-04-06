@@ -38,6 +38,16 @@ def obstacle_movement(obstacle_list):
         return []
 
 
+def player_animation():
+    global player_surf, player_index
+    if player_rect.bottom < 300:
+        player_surf = player_jump
+    else:
+        player_index += 0.1
+        if player_index >= len(player_walk):player_index = 0
+        player_surf = player_walk[int(player_index)]
+
+
 if __name__ == '__main__':
     game_active = True
     pygame.init()
@@ -47,9 +57,17 @@ if __name__ == '__main__':
     test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
     sky_surface = pygame.image.load('graphics/Sky.png')
     ground_surface = pygame.image.load('graphics/ground.png').convert_alpha()
-    player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+
+    player_walk_1= pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+    player_walk_2= pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
+    player_walk = [player_walk_1, player_walk_2]
+    player_index = 0
+    player_jump =  pygame.image.load('graphics/Player/jump.png').convert_alpha()
+
+    player_surf = player_walk[player_index]
     start_time = 0
     player_rect = player_surf.get_rect(midbottom=(80, 300))
+
     snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
     fly_surf = pygame.image.load('graphics/fly/fly1.png').convert_alpha()
 
@@ -108,6 +126,7 @@ if __name__ == '__main__':
             player_rect.y += player_gravity
             if player_rect.bottom >= 300:
                 player_rect.bottom = 300
+            player_animation()
             screen.blit(player_surf, player_rect)
 
             obstacle_rect_list = obstacle_movement(obstacle_rect_list)
