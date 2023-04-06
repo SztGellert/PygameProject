@@ -17,15 +17,16 @@ class Player(pygame.sprite.Sprite):
         self.image = self.player_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom=(80, 300))
         self.gravity = 0
+
     def player_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
-            self.gravity =-20
+            self.gravity = -20
 
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
-        if self.rect.bottom >= 300:self.rect.bottom = 300
+        if self.rect.bottom >= 300: self.rect.bottom = 300
 
     def update(self):
         self.player_input()
@@ -57,7 +58,8 @@ class Obstacle(pygame.sprite.Sprite):
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.rect = self.image.get_rect(midbottom = (random.randint(900, 1100), y_pos))
+        self.rect = self.image.get_rect(midbottom=(random.randint(900, 1100), y_pos))
+
     def animation_state(self):
         self.animation_index += 0.1
         if self.animation_index >= len(self.frames): self.animation_index = 0
@@ -71,6 +73,8 @@ class Obstacle(pygame.sprite.Sprite):
     def destroy(self):
         if self.rect.x <= -100:
             self.kill()
+
+
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     score_surf = test_font.render(f'Score: {current_time}', False, (64, 64, 64))
@@ -85,6 +89,14 @@ def collision(player, obstacles):
             if player.colliderect(obstacle_rect):
                 return False
     return True
+
+
+def collision_sprite():
+    if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
+        obstacle_group.empty()
+        return False
+    else:
+        return True
 
 
 def obstacle_movement(obstacle_list):
@@ -225,6 +237,7 @@ if __name__ == '__main__':
             obstacle_group.draw(screen)
             obstacle_group.update()
 
+            game_active = collision_sprite()
         else:
             screen.fill((94, 129, 162))
             screen.blit(player_stand, player_stand_rect)
