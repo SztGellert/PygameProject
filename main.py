@@ -27,16 +27,22 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                pygame.quit()
                exit()
-            mouse_pos = pygame.mouse.get_pos()
-            if player_rect.collidepoint(mouse_pos):
-                print(pygame.mouse.get_pressed())
-            if event.type == pygame.MOUSEMOTION:
-                if player_rect.collidepoint(event.pos):
-                    print("col")
-            keys = pygame.key.get_pressed()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
-                    player_gravity = -20
+            if game_active:
+                mouse_pos = pygame.mouse.get_pos()
+                if player_rect.collidepoint(mouse_pos):
+                    print(pygame.mouse.get_pressed())
+                if event.type == pygame.MOUSEMOTION:
+                    if player_rect.collidepoint(event.pos):
+                        print("col")
+                keys = pygame.key.get_pressed()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
+                        player_gravity = -20
+            else:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        game_active = True
+                        snail_rect.right=800
         if game_active:
             screen.blit(sky_surface, (0,0))
             screen.blit(ground_surface, (0,300))
@@ -56,6 +62,7 @@ if __name__ == '__main__':
                 game_active = False
         else:
             screen.fill("Yellow")
+
 
         pygame.display.update()
 
