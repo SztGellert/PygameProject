@@ -19,13 +19,21 @@ if __name__ == '__main__':
     test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
     sky_surface = pygame.image.load('graphics/Sky.png')
     ground_surface = pygame.image.load('graphics/ground.png').convert_alpha()
-    #score_surf = test_font.render('My game', False, (64,64,64)).convert_alpha()
-    #score_rect = score_surf.get_rect(center = (400, 50))
     player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
     start_time = 0
     player_rect = player_surf.get_rect(midbottom = (80, 300))
     snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
     snail_rect = snail_surface.get_rect(midbottom = (160, 300))
+
+    player_stand = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
+    player_stand = pygame.transform.rotozoom(player_stand, 0 ,2 )
+    player_stand_rect = player_stand.get_rect(center = (400, 200))
+
+    game_name= test_font.render('Pixel Runner', False, (111,196,169))
+    game_name_rect = game_name.get_rect(center = (400, 80))
+
+
+
     player_gravity = 0
     score = 0
     while True:
@@ -59,9 +67,6 @@ if __name__ == '__main__':
             screen.blit(sky_surface, (0,0))
             screen.blit(ground_surface, (0,300))
             display_score(score)
-            #pygame.draw.rect(screen, "#c0e8ec", score_rect)
-            #pygame.draw.rect(screen, "#c0e8ec", score_rect, 10)
-            #screen.blit(score_surf, score_rect)
             if snail_rect.right < 0: snail_rect.left = 800
             screen.blit(snail_surface, snail_rect)
             snail_rect.left -= 3
@@ -76,9 +81,12 @@ if __name__ == '__main__':
 
         else:
             screen.fill((94,129,162))
-            score_surf = test_font.render(f'Score: {score}', False, (64, 64, 64))
-            score_rect = score_surf.get_rect(center=(400, 50))
-            screen.blit(score_surf, score_rect)
+            if score != 0:
+                score_surf = test_font.render(f'Score: {score}', False, (64, 64, 64))
+                score_rect = score_surf.get_rect(center=(400, 50))
+                screen.blit(score_surf, score_rect)
+            screen.blit(game_name, game_name_rect)
+            screen.blit(player_stand, player_stand_rect)
 
         pygame.display.update()
 
