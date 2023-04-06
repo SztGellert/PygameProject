@@ -4,11 +4,12 @@ import time
 import pygame
 from sys import exit
 
-def display_score(score: int):
-    score_surf = test_font.render(f'Score: {score}', False, (64,64,64))
+def display_score():
+    current_time = int(pygame.time.get_ticks() / 1000) - start_time
+    score_surf = test_font.render(f'Score: {current_time}', False, (64,64,64))
     score_rect = score_surf.get_rect(center = (400,50))
     screen.blit(score_surf, score_rect)
-
+    return current_time
 
 if __name__ == '__main__':
     game_active = True
@@ -32,7 +33,8 @@ if __name__ == '__main__':
     game_name= test_font.render('Pixel Runner', False, (111,196,169))
     game_name_rect = game_name.get_rect(center = (400, 80))
 
-
+    game_msg = test_font.render('Press space to run', False, (111,196,169))
+    game_msg_rect = game_name.get_rect(center = (350 , 340))
 
     player_gravity = 0
     score = 0
@@ -52,12 +54,10 @@ if __name__ == '__main__':
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
                         player_gravity = -20
-                        score+=1
 
             else:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        score = 0
 
                         game_active = True
                         snail_rect.right=800
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
             screen.blit(sky_surface, (0,0))
             screen.blit(ground_surface, (0,300))
-            display_score(score)
+            score = display_score()
             if snail_rect.right < 0: snail_rect.left = 800
             screen.blit(snail_surface, snail_rect)
             snail_rect.left -= 3
@@ -81,12 +81,17 @@ if __name__ == '__main__':
 
         else:
             screen.fill((94,129,162))
-            if score != 0:
-                score_surf = test_font.render(f'Score: {score}', False, (64, 64, 64))
-                score_rect = score_surf.get_rect(center=(400, 50))
-                screen.blit(score_surf, score_rect)
+
+            score_msg = test_font.render(f'Your score: {score}', False, (111, 196, 169))
+            score_msg_rect = score_msg.get_rect(center=(400, 350))
             screen.blit(game_name, game_name_rect)
             screen.blit(player_stand, player_stand_rect)
+
+            if score == 0:
+                screen.blit(game_msg, game_msg_rect)
+            else:
+                screen.blit(score_msg, score_msg_rect)
+
 
         pygame.display.update()
 
