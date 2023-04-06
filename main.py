@@ -1,4 +1,5 @@
 import math
+import random
 import time
 
 import pygame
@@ -10,6 +11,17 @@ def display_score():
     score_rect = score_surf.get_rect(center = (400,50))
     screen.blit(score_surf, score_rect)
     return current_time
+
+def obstacle_movement(obstacle_list):
+    if obstacle_list:
+        for obstacle_rect in obstacle_list:
+            obstacle_rect.x -= 5
+
+            screen.blit(snail_surface, obstacle_rect)
+
+        return obstacle_list
+    else:
+        return []
 
 if __name__ == '__main__':
     game_active = True
@@ -35,6 +47,11 @@ if __name__ == '__main__':
 
     game_msg = test_font.render('Press space to run', False, (111,196,169))
     game_msg_rect = game_name.get_rect(center = (350 , 340))
+
+    obstacle_timer = pygame.USEREVENT + 1
+    pygame.time.set_timer(obstacle_timer, 900)
+
+    obstacle_rect_list = []
 
     player_gravity = 0
     score = 0
@@ -62,19 +79,22 @@ if __name__ == '__main__':
                         game_active = True
                         snail_rect.right=800
                         start_time =  int(pygame.time.get_ticks() / 1000)
+            if event.type == obstacle_timer and game_active:
+                obstacle_rect_list.append(snail_surface.get_rect(bottomright = (random.randint(900,1100), 300)))
         if game_active:
 
             screen.blit(sky_surface, (0,0))
             screen.blit(ground_surface, (0,300))
             score = display_score()
-            if snail_rect.right < 0: snail_rect.left = 800
-            screen.blit(snail_surface, snail_rect)
-            snail_rect.left -= 3
+
+
             player_gravity += 1
             player_rect.y += player_gravity
             if player_rect.bottom >= 300:
                 player_rect.bottom = 300
             screen.blit(player_surf, player_rect)
+
+            obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
             if snail_rect.colliderect(player_rect):
                 game_active = False
@@ -87,12 +107,11 @@ if __name__ == '__main__':
             screen.blit(game_name, game_name_rect)
             screen.blit(player_stand, player_stand_rect)
 
-            if score == 0:
-                screen.blit(game_msg, game_msg_rect)
-            else:
-                screen.blit(score_msg, score_msg_rect)
+            if score == 0: screen.blit(game_msg, game_msg_rect)
+            else: screen.blit(score_msg, score_msg_rect)
 
 
         pygame.display.update()
 
         clock.tick(60)
+
